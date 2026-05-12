@@ -1,13 +1,13 @@
-package com.library.service;
+package com.example.HCL_MOCK_LMS.service;
 
-import com.library.dto.IssueDTO;
-import com.library.entity.Book;
-import com.library.entity.IssueRecord;
-import com.library.entity.Member;
-import com.library.exception.BusinessException;
-import com.library.exception.ResourceNotFoundException;
-import com.library.repository.BookRepository;
-import com.library.repository.IssueRecordRepository;
+import com.example.HCL_MOCK_LMS.dto.IssueDTO;
+import com.example.HCL_MOCK_LMS.entity.Book;
+import com.example.HCL_MOCK_LMS.entity.IssueRecord;
+import com.example.HCL_MOCK_LMS.entity.Member;
+import com.example.HCL_MOCK_LMS.exception.BusinessException;
+import com.example.HCL_MOCK_LMS.exception.ResourceNotFoundException;
+import com.example.HCL_MOCK_LMS.repository.BookRepository;
+import com.example.HCL_MOCK_LMS.repository.IssueRecordRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;

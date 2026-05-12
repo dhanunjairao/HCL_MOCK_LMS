@@ -1,4 +1,4 @@
-package com.library.entity;
+package com.example.HCL_MOCK_LMS.entity;
 
 import jakarta.persistence.*;
 import lombok.*;

@@ -1,8 +1,7 @@
-package com.library.controller;
-
-import com.library.dto.ApiResponse;
-import com.library.dto.IssueDTO;
-import com.library.service.IssueService;
+package com.example.HCL_MOCK_LMS.controller;
+import com.example.HCL_MOCK_LMS.dto.ApiResponse;
+import com.example.HCL_MOCK_LMS.dto.IssueDTO;
+import com.example.HCL_MOCK_LMS.service.IssueService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;

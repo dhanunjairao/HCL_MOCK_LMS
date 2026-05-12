@@ -1,4 +1,4 @@
-package com.library.dto;
+package com.example.HCL_MOCK_LMS.dto;
 
 import jakarta.validation.constraints.NotBlank;
 import lombok.*;

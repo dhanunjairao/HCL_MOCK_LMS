@@ -1,8 +1,8 @@
-package com.library.controller;
+package com.example.HCL_MOCK_LMS.controller;
 
-import com.library.dto.ApiResponse;
-import com.library.dto.BookDTO;
-import com.library.service.BookService;
+import com.example.HCL_MOCK_LMS.dto.ApiResponse;
+import com.example.HCL_MOCK_LMS.dto.BookDTO;
+import com.example.HCL_MOCK_LMS.service.BookService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;

@@ -1,9 +1,9 @@
-package com.library.service;
+package com.example.HCL_MOCK_LMS.service;
 
-import com.library.dto.BookDTO;
-import com.library.entity.Book;
-import com.library.exception.ResourceNotFoundException;
-import com.library.repository.BookRepository;
+import com.example.HCL_MOCK_LMS.dto.BookDTO;
+import com.example.HCL_MOCK_LMS.entity.Book;
+import com.example.HCL_MOCK_LMS.exception.ResourceNotFoundException;
+import com.example.HCL_MOCK_LMS.repository.BookRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
