@@ -1,93 +1,87 @@
-package com.library.service;
+package com.example.HCL_MOCK_LMS.service;
 
-import com.library.dto.IssueResponse;
-import com.library.dto.MemberRequest;
-import com.library.entity.IssueRecord;
-import com.library.entity.Member;
-import com.library.entity.Role;
-import com.library.entity.User;
-import com.library.exception.BusinessException;
-import com.library.exception.NotFoundException;
-import com.library.repository.IssueRecordRepository;
-import com.library.repository.MemberRepository;
-import com.library.repository.UserRepository;
+import com.example.HCL_MOCK_LMS.dto.IssueDTO;
+import com.example.HCL_MOCK_LMS.dto.MemberDTO;
+import com.example.HCL_MOCK_LMS.entity.IssueRecord;
+import com.example.HCL_MOCK_LMS.entity.Member;
+import com.example.HCL_MOCK_LMS.exception.BusinessException;
+import com.example.HCL_MOCK_LMS.exception.ResourceNotFoundException;
+import com.example.HCL_MOCK_LMS.repository.IssueRecordRepository;
+import com.example.HCL_MOCK_LMS.repository.MemberRepository;
 import lombok.RequiredArgsConstructor;
-import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.time.LocalDate;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
 public class MemberService {
 
     private final MemberRepository memberRepository;
-    private final UserRepository userRepository;
     private final IssueRecordRepository issueRecordRepository;
-    private final PasswordEncoder passwordEncoder;
 
     @Transactional
-    public Member create(MemberRequest req) {
-        if (userRepository.existsByUsername(req.username())) {
-            throw new BusinessException("Username already taken");
-        }
-        if (memberRepository.existsByEmail(req.email())) {
-            throw new BusinessException("Email already registered");
+    public MemberDTO.Response registerMember(MemberDTO.Request request) {
+        if (memberRepository.existsByEmail(request.getEmail())) {
+            throw new BusinessException("Email already registered: " + request.getEmail());
         }
 
-        User user = User.builder()
-                .username(req.username())
-                .passwordHash(passwordEncoder.encode(req.password()))
-                .role(Role.MEMBER)
+        Member member = Member.builder()
+                .name(request.getName())
+                .email(request.getEmail())
                 .build();
-        user = userRepository.save(user);
 
-        Member m = Member.builder()
-                .name(req.name())
-                .email(req.email())
-                .phone(req.phone())
-                .joinedOn(LocalDate.now())
-                .user(user)
-                .build();
-        return memberRepository.save(m);
+        return toResponse(memberRepository.save(member));
     }
 
     @Transactional(readOnly = true)
-    public List<Member> all() {
-        return memberRepository.findAll();
+    public List<MemberDTO.Response> getAllMembers() {
+        return memberRepository.findAll().stream()
+                .map(this::toResponse)
+                .collect(Collectors.toList());
     }
 
     @Transactional(readOnly = true)
-    public Member get(Long id) {
+    public MemberDTO.Response getMemberById(Long id) {
+        return toResponse(findMemberOrThrow(id));
+    }
+
+    @Transactional(readOnly = true)
+    public List<IssueDTO.Response> getBooksIssuedToMember(Long memberId) {
+        findMemberOrThrow(memberId); // verify member exists
+        return issueRecordRepository.findByMemberMemberId(memberId).stream()
+                .map(this::toIssueResponse)
+                .collect(Collectors.toList());
+    }
+
+    // ── Internal helpers ──────────────────────────────────────────────────────
+
+    public Member findMemberOrThrow(Long id) {
         return memberRepository.findById(id)
-                .orElseThrow(() -> new NotFoundException("Member not found: " + id));
+                .orElseThrow(() -> new ResourceNotFoundException("Member not found with id: " + id));
     }
 
-    @Transactional(readOnly = true)
-    public List<IssueResponse> issuesOf(Long memberId) {
-        return issueRecordRepository.findByMemberId(memberId).stream()
-                .map(this::toDto)
-                .toList();
+    private MemberDTO.Response toResponse(Member member) {
+        return MemberDTO.Response.builder()
+                .memberId(member.getMemberId())
+                .name(member.getName())
+                .email(member.getEmail())
+                .build();
     }
 
-    @Transactional(readOnly = true)
-    public List<IssueResponse> issuesOfUsername(String username) {
-        Member m = memberRepository.findByUser_Username(username)
-                .orElseThrow(() -> new NotFoundException("Member profile not found"));
-        return issuesOf(m.getId());
-    }
-
-    private IssueResponse toDto(IssueRecord r) {
-        return new IssueResponse(
-                r.getId(),
-                r.getBook().getId(),
-                r.getBook().getTitle(),
-                r.getMember().getId(),
-                r.getMember().getName(),
-                r.getIssuedOn(),
-                r.getReturnedOn()
-        );
+    private IssueDTO.Response toIssueResponse(IssueRecord record) {
+        return IssueDTO.Response.builder()
+                .issueId(record.getIssueId())
+                .bookId(record.getBook().getBookId())
+                .bookTitle(record.getBook().getTitle())
+                .bookAuthor(record.getBook().getAuthor())
+                .memberId(record.getMember().getMemberId())
+                .memberName(record.getMember().getName())
+                .issueDate(record.getIssueDate())
+                .returnDate(record.getReturnDate())
+                .returned(record.isReturned())
+                .build();
     }
 }

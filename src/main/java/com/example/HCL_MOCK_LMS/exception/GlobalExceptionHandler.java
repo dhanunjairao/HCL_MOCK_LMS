@@ -1,4 +1,4 @@
-package com.library.exception;
+package com.example.HCL_MOCK_LMS.exception;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;

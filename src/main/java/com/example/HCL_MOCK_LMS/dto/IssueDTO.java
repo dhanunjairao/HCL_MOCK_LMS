@@ -1,4 +1,4 @@
-package com.library.dto;
+package com.example.HCL_MOCK_LMS.dto;
 
 import java.time.LocalDate;
 
@@ -11,7 +11,11 @@ import lombok.Setter;
 
 public class IssueDTO {
 
-    @Getter @Setter @NoArgsConstructor @AllArgsConstructor @Builder
+    @Getter
+    @Setter
+    @NoArgsConstructor
+    @AllArgsConstructor
+    @Builder
     public static class IssueRequest {
         @NotNull(message = "Book ID is required")
         private Long bookId;
@@ -20,7 +24,11 @@ public class IssueDTO {
         private Long memberId;
     }
 
-    @Getter @Setter @NoArgsConstructor @AllArgsConstructor @Builder
+    @Getter
+    @Setter
+    @NoArgsConstructor
+    @AllArgsConstructor
+    @Builder
     public static class Response {
         private Long issueId;
         private Long bookId;

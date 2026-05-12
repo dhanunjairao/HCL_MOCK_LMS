@@ -31,5 +31,6 @@ public class IssueRecord {
     private LocalDate returnDate;
 
     @Column(nullable = false)
+    @Builder.Default
     private boolean returned = false;
 }
